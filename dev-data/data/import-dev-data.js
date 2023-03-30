@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const fs = require('fs');
-const Tour = require('../../models/tourModel')
-const path = require('path')
+const path = require('path');
+const Tour = require('../../models/tourModel');
 
 dotenv.config({ path: './config.env' });
 
@@ -23,38 +23,36 @@ mongoose
 
 //read json file
 
-const pathToTours = path.join(__dirname,'tours-simple.json')
+const pathToTours = path.join(__dirname, 'tours.json');
 
-const tours =JSON.parse(fs.readFileSync(pathToTours,'utf-8'))
+const tours = JSON.parse(fs.readFileSync(pathToTours, 'utf-8'));
 
 //import data into DB
 
-const importData = async()=>{
-    try{
-        await Tour.create(tours);
-        console.log('Data successfully loaded')
-    }catch(err){
-        console.log(err)
-    }
-    process.exit();
-
-}
+const importData = async () => {
+  try {
+    await Tour.create(tours);
+    console.log('Data successfully loaded');
+  } catch (err) {
+    console.log(err);
+  }
+  process.exit();
+};
 
 //DELETE all DATA from COLLECTION
 
-const deleteData = async()=>{
-    try{
-        await Tour.deleteMany();
-        console.log('Data successfully deleted');
-    }catch(err){
-        console.log(err)
-    }
-    process.exit();
+const deleteData = async () => {
+  try {
+    await Tour.deleteMany();
+    console.log('Data successfully deleted');
+  } catch (err) {
+    console.log(err);
+  }
+  process.exit();
+};
 
-}
-
-if(process.argv[2]==='--import'){
+if (process.argv[2] === '--import') {
   importData();
-} else if(process.argv[2]==='--delete'){
+} else if (process.argv[2] === '--delete') {
   deleteData();
 }
