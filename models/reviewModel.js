@@ -33,10 +33,15 @@ const reviwSchema = mongoose.Schema(
 );
 
 reviwSchema.pre(/^find/, function(next) {
+  //   this.populate({
+  //     path: 'tour',
+  //     select: 'name'
+  //   }).populate({
+  //     path: 'user',
+  //     select: 'name photo'
+  //   });
+
   this.populate({
-    path: 'tour',
-    select: 'name'
-  }).populate({
     path: 'user',
     select: 'name photo'
   });
@@ -46,3 +51,5 @@ reviwSchema.pre(/^find/, function(next) {
 const Review = mongoose.model('Review', reviwSchema);
 
 module.exports = Review;
+
+//Post //tour/23334/reviews
