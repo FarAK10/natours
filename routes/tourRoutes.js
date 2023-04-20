@@ -20,14 +20,9 @@ router
     tourController.getMonthlyPlan
   );
 
-router.get('/', tourController.getAllTours);
 router
-  .route('/')
-  .post(
-    authController.protect,
-    authController.restrictTo('admin', 'lead'),
-    tourController.createTour
-  );
+  .route('/tours-within/:distance/center/:latlng/unit/:unit')
+  .get(tourController.getToursWithin);
 
 router
   .route('/:id')
@@ -44,5 +39,16 @@ router
   );
 
 router.use('/:tourId/reviews', reviewRouter);
+
+router.route('/distances/:latlng/unit/:unit').get(tourController.getDistances);
+
+router.get('/', tourController.getAllTours);
+router
+  .route('/')
+  .post(
+    authController.protect,
+    authController.restrictTo('admin', 'lead'),
+    tourController.createTour
+  );
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Tour = require('./tourModel');
 
 const reviwSchema = mongoose.Schema(
   {
@@ -32,6 +33,8 @@ const reviwSchema = mongoose.Schema(
   }
 );
 
+reviwSchema.index({ tour: 1, user: 1 }, { unique: true });
+
 reviwSchema.pre(/^find/, function(next) {
   //   this.populate({
   //     path: 'tour',
@@ -48,6 +51,44 @@ reviwSchema.pre(/^find/, function(next) {
   next();
 });
 
+reviwSchema.statics.calcAvearageRatings = async function(tourId) {
+  const stats = await this.aggregate([
+    {
+      $match: { tour: tourId }
+    },
+    {
+      $group: {
+        _id: '$tour',
+        nRatings: { $sum: 1 },
+        avgRating: { $avg: '$rating' }
+      }
+    }
+  ]);
+  if (stats.length > 0) {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: stats[0].nRatings,
+      ratingsAverage: stats[0].avgRating
+    });
+  } else {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: 0,
+      ratingsAverage: 4.5
+    });
+  }
+};
+
+reviwSchema.post('save', async function(next) {
+  //this points to the current review
+  await this.constructor.calcAvearageRatings(this.tour);
+});
+
+reviwSchema.pre(/^findOneAnd/, async function(next) {
+  this.r = await this.findOne();
+  next();
+});
+reviwSchema.post(/^findOneAnd/, async function(next) {
+  await this.r.constructor.calcAvearageRatings(this.r.tour);
+});
 const Review = mongoose.model('Review', reviwSchema);
 
 module.exports = Review;
