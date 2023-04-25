@@ -8,6 +8,8 @@ const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const AppError = require('./utils/appError');
 
+const viewRouter = require('./routes/viewRoutes');
+
 const app = express();
 
 // 1) MIDDLEWARES
@@ -26,20 +28,11 @@ app.use((req, res, next) => {
 });
 
 // 3) ROUTES
-app.get('/', (req, res) => {
-  res.status(200).render('base', {
-    tour: 'forest hiker',
-    user: 'Jonas'
-  });
-});
-
-app.get('/overview', (req, res) => {
-  res.status(200).render('overview', { title: 'All tours' });
-});
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
+app.use('/', viewRouter);
 
 app.all('*', (req, res, next) => {
   const err = new AppError(`Cant find ${req.originalUrl} on this server`, 404);
