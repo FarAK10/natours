@@ -3,6 +3,7 @@ const morgan = require('morgan');
 
 const path = require('path');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -28,6 +29,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
