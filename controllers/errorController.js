@@ -43,6 +43,19 @@ const sendErrorDev = (err, req, res) => {
 
 const sendErrorProd = (err, req, res) => {
   // Operational, trusted error: send message to client
+  if (req.originalUrl.startsWith === '/api') {
+    res.status(err.statusCode).json({
+      status: err.status,
+      error: err,
+      message: err.message,
+      stack: err.stack
+    });
+  } else {
+    res.status(err.statusCode).render('error', {
+      title: 'Something went wrong',
+      msg: err.message
+    });
+  }
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: err.status,
@@ -55,9 +68,9 @@ const sendErrorProd = (err, req, res) => {
     console.error('ERROR 💥', err);
 
     // 2) Send generic message
-    res.status(500).json({
-      status: 'error',
-      message: 'Something went very wrong!'
+    res.status(err.statusCode).render('error', {
+      title: 'Something went wrong!',
+      msg: 'Please try again later'
     });
   }
 };
@@ -71,7 +84,7 @@ module.exports = (err, req, res, next) => {
     sendErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
     let error = { ...err };
-
+    error.message = err.message;
     if (error.name === 'CastError') error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
     if (error.name === 'ValidationError')

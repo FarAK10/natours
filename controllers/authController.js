@@ -122,6 +122,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
   //grant access to protected Route
   req.user = currentUser;
+  res.locals.user = currentUser;
   next();
 });
 
@@ -206,21 +207,21 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
-  //1) Get user from collection
-  const { password, email, confirmPassword } = req.body.email;
-  const user = await User.findOne({ email: email }).select('+password');
+  // 1) Get user from collection
+  const user = await User.findById(req.user.id).select('+password');
 
-  //2) check if POSTed current password is correct
-  if (!User.correctPassword(password, user.password)) {
-    return next(new AppError('Incorrect password', 401));
+  // 2) Check if POSTed current password is correct
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+    return next(new AppError('Your current password is wrong.', 401));
   }
 
-  //3) If so, update password
-  user.password = password;
-  user.confirmPassword = confirmPassword;
+  // 3) If so, update password
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
   await user.save();
+  // User.findByIdAndUpdate will NOT work as intended!
 
-  //4) Log user in, send JWT
+  // 4) Log user in, send JWT
   createToken(user, 200, res);
 });
 
