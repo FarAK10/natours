@@ -3,7 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 
 exports.getOverView = catchAsync(async (req, res, next) => {
   const tours = await Tour.find();
-  console.log(res.locals.user)
+  console.log(res.locals.user);
   res.status(200).render('overview', { title: 'All tours', tours });
 });
 

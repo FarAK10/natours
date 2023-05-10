@@ -12,7 +12,6 @@ export const login = async (email, password) => {
         email,
         password
       },
-
     });
 
     if (res.data.status === 'success') {
