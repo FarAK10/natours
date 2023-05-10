@@ -19,7 +19,6 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 app.use(cookieParser());
