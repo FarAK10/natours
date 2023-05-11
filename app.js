@@ -24,11 +24,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'https://farak10-natours.onrender.com/'],
+    origin: ['http://localhost:3000', 'https://farak10-natours.onrender.com'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
   })
 );
+app.options('*', cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(express.static(path.join(__dirname, 'public')));
