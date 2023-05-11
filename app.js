@@ -24,7 +24,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: '*',
+    origin: ['http://localhost:3000', 'https://farak10-natours.onrender.com/'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
   })
