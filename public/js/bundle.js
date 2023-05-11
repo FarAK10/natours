@@ -12401,7 +12401,7 @@ exports.showAlert = showAlert;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.logout = exports.login = void 0;
+exports.signUp = exports.logout = exports.login = void 0;
 
 var _axios = _interopRequireDefault(require("axios"));
 
@@ -12471,44 +12471,96 @@ function () {
 
 exports.login = login;
 
-var logout =
+var signUp =
 /*#__PURE__*/
 function () {
   var _ref2 = _asyncToGenerator(
   /*#__PURE__*/
-  _regeneratorRuntime().mark(function _callee2() {
+  _regeneratorRuntime().mark(function _callee2(data) {
     var res;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
-          _context2.prev = 0;
-          _context2.next = 3;
+          console.log('signup', data);
+          _context2.prev = 1;
+          _context2.next = 4;
+          return (0, _axios.default)({
+            method: 'POST',
+            url: 'http://127.0.0.1:3000/api/v1/users/signup',
+            withCredentials: true,
+            data: data
+          });
+
+        case 4:
+          res = _context2.sent;
+
+          if (res.data.status === 'success') {
+            (0, _alerts.showAlert)('success', 'SignUp successfully!');
+            window.setTimeout(function () {
+              location.assign('/');
+            }, 1500);
+          }
+
+          _context2.next = 11;
+          break;
+
+        case 8:
+          _context2.prev = 8;
+          _context2.t0 = _context2["catch"](1);
+          (0, _alerts.showAlert)('error', _context2.t0.response.data.message);
+
+        case 11:
+        case "end":
+          return _context2.stop();
+      }
+    }, _callee2, null, [[1, 8]]);
+  }));
+
+  return function signUp(_x3) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+
+exports.signUp = signUp;
+
+var logout =
+/*#__PURE__*/
+function () {
+  var _ref3 = _asyncToGenerator(
+  /*#__PURE__*/
+  _regeneratorRuntime().mark(function _callee3() {
+    var res;
+    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+      while (1) switch (_context3.prev = _context3.next) {
+        case 0:
+          _context3.prev = 0;
+          _context3.next = 3;
           return (0, _axios.default)({
             method: 'GET',
             url: 'http://127.0.0.1:3000/api/v1/users/logout'
           });
 
         case 3:
-          res = _context2.sent;
+          res = _context3.sent;
           if (res.data.status = 'success') location.reload(true);
-          _context2.next = 11;
+          _context3.next = 11;
           break;
 
         case 7:
-          _context2.prev = 7;
-          _context2.t0 = _context2["catch"](0);
-          console.log(_context2.t0.response);
+          _context3.prev = 7;
+          _context3.t0 = _context3["catch"](0);
+          console.log(_context3.t0.response);
           (0, _alerts.showAlert)('error', 'Error logging out! Try again.');
 
         case 11:
         case "end":
-          return _context2.stop();
+          return _context3.stop();
       }
-    }, _callee2, null, [[0, 7]]);
+    }, _callee3, null, [[0, 7]]);
   }));
 
   return function logout() {
-    return _ref2.apply(this, arguments);
+    return _ref3.apply(this, arguments);
   };
 }();
 
@@ -12851,7 +12903,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 // DOM ELEMENTS
 var mapBox = document.getElementById('map');
 var loginForm = document.querySelector('.form--login');
+var signupForm = document.querySelector('#signup-form');
 var logOutBtn = document.querySelector('.nav__el--logout');
+var signupBtn = document.querySelector('.btn-signup');
 var userDataForm = document.querySelector('.form-user-data');
 var userPasswordForm = document.querySelector('.form-user-password'); // DELEGATION
 
@@ -12867,6 +12921,21 @@ if (loginForm) loginForm.addEventListener('submit', function (e) {
   (0, _login.login)(email, password);
 });
 if (logOutBtn) logOutBtn.addEventListener('click', _login.logout);
+
+if (signupForm) {
+  signupForm.addEventListener('submit', function (e) {
+    console.log('dd');
+    e.preventDefault();
+    var data = {};
+    data.name = document.getElementById('name').value;
+    data.email = document.getElementById('email').value;
+    data.password = document.getElementById('password').value;
+    data.passwordConfirm = document.getElementById('password-confirm').value;
+    data.role = document.getElementById('role').value;
+    (0, _login.signUp)(data);
+  });
+}
+
 if (userDataForm) userDataForm.addEventListener('submit', function (e) {
   e.preventDefault();
   var form = new FormData();
