@@ -12431,7 +12431,7 @@ function () {
           _context.next = 3;
           return (0, _axios.default)({
             method: 'POST',
-            url: 'http://127.0.0.1:3000/api/v1/users/login',
+            url: 'https://farak10-natours.onrender.com/api/v1/users/login',
             withCredentials: true,
             data: {
               email: email,
@@ -12486,7 +12486,7 @@ function () {
           _context2.next = 4;
           return (0, _axios.default)({
             method: 'POST',
-            url: 'http://127.0.0.1:3000/api/v1/users/signup',
+            url: 'https://farak10-natours.onrender.com/api/v1/users/signup',
             withCredentials: true,
             data: data
           });
@@ -12537,7 +12537,7 @@ function () {
           _context3.next = 3;
           return (0, _axios.default)({
             method: 'GET',
-            url: 'http://127.0.0.1:3000/api/v1/users/logout'
+            url: 'https://farak10-natours.onrender.com/api/v1/users/logout'
           });
 
         case 3:
